@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Members - STRAYGODS Guild</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <header>
+        <div class="logo">
+            <img src="images/STRAYGODS_Logo.png" alt="STRAYGODS Guild Logo" class="guild-logo">
+        </div>
+
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="about.html">ABOUT</a></li>
+                <li><a href="members.html" class="active">MEMBERS</a></li>
+                <li><a href="partylist.html">PARTY LIST</a></li>
+                <li><a href="events.html">EVENTS</a></li>
+                <li><a href="contact.html">CONTACT</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="members-content">
+            <div class="search-container">
+                <h2>Find Members</h2>
+                <input type="text" id="member-search" placeholder="Search by name or class...">
+                <div id="search-results"></div>
+            </div>
+
+            <div class="class-stats">
+                <div class="total-members">
+                    <div class="count" id="total-members-count">0</div>
+                    <div class="label">Total Members</div>
+                </div>
+                <h2>Class Distribution</h2>
+                <div id="class-stats-grid" class="stats-grid">
+                    <!-- Class statistics will be loaded here -->
+                </div>
+            </div>
+
+            <div class="guild-leadership">
+                <h2>Guild Leadership</h2>
+                <div id="leadership-members" class="members-grid">
+                    <!-- Leadership members will be loaded here -->
+                </div>
+            </div>
+
+            <div class="guild-divisions">
+                <h2>Guild Members</h2>
+                <div id="division-members" class="members-grid">
+                    <!-- Division members will be loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">HOME</a></li>
+                    <li><a href="about.html">ABOUT</a></li>
+                    <li><a href="members.html" class="active">MEMBERS</a></li>
+                    <li><a href="partylist.html">PARTY LIST</a></li>
+                    <li><a href="events.html">EVENTS</a></li>
+                    <li><a href="contact.html">CONTACT</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Discord: STRAYGODS Guild</p>
+                <p>Email: contact@straygodsguild.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">Discord</a>
+                    <a href="#" class="social-link">Facebook</a>
+                    <a href="#" class="social-link">Twitter</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 STRAYGODS. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Custom Scripts -->
+    <script type="module" src="js/config.js"></script>
+    <script type="module" src="js/sheets.js"></script>
+    <script type="module">
+        import { CONFIG } from './js/config.js';
+        import { fetchSheetData } from './js/sheets.js';
+
+        async function displayMembers() {
+            try {
+                console.log('Starting to fetch members data...');
+                
+                // Try to fetch from Google Sheets
+                console.log('Fetching members from sheet:', CONFIG.SHEETS.MEMBERS);
+                const members = await fetchSheetData(CONFIG.SHEETS.MEMBERS);
+                console.log('Members data received:', members);
+
+                if (!members || members.length === 0) {
+                    throw new Error('No members data available');
+                }
+
+                // Update total members count
+                const totalMembersCount = document.getElementById('total-members-count');
+                totalMembersCount.textContent = members.length;
+                
+                // Calculate class statistics
+                const classStats = {};
+                members.forEach(member => {
+                    if (member.class) {
+                        classStats[member.class] = (classStats[member.class] || 0) + 1;
+                    }
+                });
+
+                // Display class statistics
+                const statsGrid = document.getElementById('class-stats-grid');
+                statsGrid.innerHTML = Object.entries(classStats)
+                    .sort(([, countA], [, countB]) => countB - countA)
+                    .map(([className, count]) => `
+                        <div class="class-stat-card">
+                            <h3>${className}</h3>
+                            <div class="class-count">${count}</div>
+                            <div class="percentage">${Math.round((count / members.length) * 100)}%</div>
+                        </div>
+                    `).join('');
+                
+                // Filter and sort leadership members
+                const leaders = members.filter(member => {
+                    const role = (member.role || '').toLowerCase();
+                    return ['guild leader', 'vice guild leader', 'admin', 'officer'].includes(role);
+                });
+
+                // Sort leaders by role importance
+                leaders.sort((a, b) => {
+                    const roleOrder = {
+                        'guild leader': 1,
+                        'vice guild leader': 2,
+                        'admin': 3,
+                        'officer': 4
+                    };
+                    const roleA = (a.role || '').toLowerCase();
+                    const roleB = (b.role || '').toLowerCase();
+                    return (roleOrder[roleA] || 99) - (roleOrder[roleB] || 99);
+                });
+
+                // Filter regular members (non-leadership)
+                const regularMembers = members.filter(member => {
+                    const role = (member.role || '').toLowerCase();
+                    return !['guild leader', 'vice guild leader', 'admin', 'officer'].includes(role);
+                });
+
+                // Function to create member card HTML
+                function createMemberCard(member, isLeader = false) {
+                    const imageUrl = member.class ? 
+                        `images/${member.class.replace(/\s+/g, '')}.png` : 
+                        'images/STRAYGODS_Logo.png';
+                    
+                    const roleClass = (member.role || '').toLowerCase().replace(/\s+/g, '-');
+
+                    return `
+                        <div class="member-card ${isLeader ? 'leader-card' : ''}" 
+                             data-role="${roleClass}">
+                            <img src="${imageUrl}" 
+                                 alt="${member.class || 'Member'} Icon" 
+                                 class="member-avatar"
+                                 onerror="this.onerror=null; this.src='images/STRAYGODS_Logo.png';">
+                            <h3>${member.name || 'Unknown Member'}</h3>
+                            ${isLeader ? `<p class="member-role">${member.role || 'Member'}</p>` : ''}
+                            <p class="member-class">${member.class || 'Unknown Class'}</p>
+                            <p class="member-level">Level ${member.level || '??'}</p>
+                            <p class="member-division">${member.division || 'Unassigned'}</p>
+                            ${isLeader && member.description ? `<p class="description">${member.description}</p>` : ''}
+                        </div>
+                    `;
+                }
+
+                // Display leadership
+                const leadershipContainer = document.getElementById('leadership-members');
+                if (leaders.length > 0) {
+                    leadershipContainer.innerHTML = leaders.map(leader => createMemberCard(leader, true)).join('');
+                } else {
+                    leadershipContainer.innerHTML = '<div class="no-members">Leadership information is being updated...</div>';
+                }
+
+                // Display regular members
+                const divisionsContainer = document.getElementById('division-members');
+                if (regularMembers.length > 0) {
+                    divisionsContainer.innerHTML = regularMembers.map(member => createMemberCard(member)).join('');
+                } else {
+                    divisionsContainer.innerHTML = '<div class="no-members">Member information is being updated...</div>';
+                }
+
+                // Setup search functionality
+                const searchInput = document.getElementById('member-search');
+                const searchResults = document.getElementById('search-results');
+
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase().trim();
+                    
+                    if (query === '') {
+                        searchResults.innerHTML = '';
+                        leadershipContainer.style.display = '';
+                        divisionsContainer.style.display = '';
+                        return;
+                    }
+
+                    const filteredMembers = members.filter(member => 
+                        (member.name && member.name.toLowerCase().includes(query)) ||
+                        (member.class && member.class.toLowerCase().includes(query)) ||
+                        (member.role && member.role.toLowerCase().includes(query)) ||
+                        (member.division && member.division.toLowerCase().includes(query))
+                    );
+
+                    if (filteredMembers.length > 0) {
+                        searchResults.innerHTML = filteredMembers.map(member => `
+                            <div class="search-result">
+                                <h4>${member.name || 'Unknown Member'}</h4>
+                                <p>${member.class || 'Unknown Class'} - ${member.role || 'Member'} - Level ${member.level || '??'}</p>
+                            </div>
+                        `).join('');
+                        
+                        leadershipContainer.style.display = 'none';
+                        divisionsContainer.style.display = 'none';
+                    } else {
+                        searchResults.innerHTML = '<div class="no-results">No members found</div>';
+                        leadershipContainer.style.display = 'none';
+                        divisionsContainer.style.display = 'none';
+                    }
+                });
+
+                // Remove loading state
+                document.body.classList.add('loaded');
+                const loadingOverlay = document.querySelector('.loading-overlay');
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'none';
+                }
+
+            } catch (error) {
+                console.error('Error loading members:', error);
+                const mainContent = document.querySelector('main');
+                if (mainContent) {
+                    mainContent.innerHTML = `
+                        <div class="error-message">
+                            <h2>Unable to load members</h2>
+                            <p>We're experiencing technical difficulties. Please try again later.</p>
+                            <p>Error details: ${error.message}</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Load members when the page loads
+        document.addEventListener('DOMContentLoaded', displayMembers);
+    </script>
+</body>
+</html>

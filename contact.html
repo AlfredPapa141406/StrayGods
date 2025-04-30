@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - STRAYGODS Guild</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-transition">
+    <div id="loading" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <header>
+        <div class="logo">
+            <img src="images/STRAYGODS_Logo.png" alt="STRAYGODS Guild Logo" class="guild-logo">
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="about.html">ABOUT</a></li>
+                <li><a href="members.html">MEMBERS</a></li>
+                <li><a href="partylist.html">PARTY LIST</a></li>
+                <li><a href="events.html">EVENTS</a></li>
+                <li><a href="contact.html" class="active">CONTACT</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="contact-container">
+            <section class="contact-section">
+                <h2 class="section-heading">Join Our Guild</h2>
+                <div id="join-info" class="content-text">
+                    <!-- Join info will be loaded here -->
+                </div>
+                
+                <div class="contact-form">
+                    <h3>Application Form</h3>
+                    <form id="application-form">
+                        <div class="form-group">
+                            <label for="name">Character Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="class">Character Class</label>
+                            <select id="class" name="class" required>
+                                <option value="">Select your class</option>
+                                <option value="Swordsman">Swordsman</option>
+                                <option value="Mage">Mage</option>
+                                <option value="Thief">Thief</option>
+                                <option value="Archer">Archer</option>
+                                <option value="Acolyte">Acolyte</option>
+                                <option value="Merchant">Merchant</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="level">Base Level</label>
+                            <input type="number" id="level" name="level" min="1" max="99" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="discord">Discord Username</label>
+                            <input type="text" id="discord" name="discord" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Why do you want to join STRAYGODS?</label>
+                            <textarea id="message" name="message" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Submit Application</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="contact-section">
+                <h2 class="section-heading">Other Ways to Contact Us</h2>
+                <div class="contact-info">
+                    <div class="contact-method">
+                        <i class="fab fa-discord contact-icon"></i>
+                        <div>
+                            <h3>Discord</h3>
+                            <p>Join our Discord server</p>
+                            <a href="#" class="btn">Join Server</a>
+                        </div>
+                    </div>
+                    <div class="contact-method">
+                        <i class="fas fa-envelope contact-icon"></i>
+                        <div>
+                            <h3>Email</h3>
+                            <p>contact@straygodsguild.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-method">
+                        <i class="fab fa-facebook contact-icon"></i>
+                        <div>
+                            <h3>Facebook</h3>
+                            <p>Follow us on Facebook</p>
+                            <a href="#" class="btn">Follow Us</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="members.html">Members</a></li>
+                    <li><a href="events.html">Events</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Discord: STRAYGODS Guild</p>
+                <p>Email: contact@straygodsguild.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-discord"></i> Discord</a>
+                    <a href="#" class="social-link"><i class="fab fa-facebook"></i> Facebook</a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i> Twitter</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 STRAYGODS. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Custom Scripts -->
+    <script type="module" src="js/config.js"></script>
+    <script type="module" src="js/sheets.js"></script>
+    <script type="module" src="js/test-connections.js"></script>
+    <script type="module">
+        import { fetchSheetData } from './js/sheets.js';
+        import { connectionTester } from './js/test-connections.js';
+
+        async function handleContactForm() {
+            const loadingOverlay = document.getElementById('loading');
+            
+            try {
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'flex';
+                }
+
+                // Fetch contact data
+                const contact = await fetchSheetData('Contact');
+
+                // Display join info
+                const joinInfo = document.getElementById('join-info');
+                const info = contact.find(section => section.type === 'join_info');
+                if (info) {
+                    joinInfo.innerHTML = info.content;
+                }
+
+                // Handle form submission
+                const form = document.getElementById('application-form');
+                if (form) {
+                    form.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        // Add your form submission logic here
+                        alert('Application submitted successfully!');
+                        form.reset();
+                    });
+                }
+
+            } catch (error) {
+                console.error('Error loading contact content:', error);
+                const main = document.querySelector('main');
+                if (main) {
+                    main.innerHTML += `
+                        <div class="error-message">
+                            Error loading content. Please try again later.
+                        </div>
+                    `;
+                }
+            } finally {
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'none';
+                }
+            }
+        }
+
+        // Load content when the page loads
+        document.addEventListener('DOMContentLoaded', handleContactForm);
+    </script>
+</body>
+</html>

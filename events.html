@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - STRAYGODS Guild</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <header>
+        <div class="logo">
+            <img src="images/STRAYGODS_Logo.png" alt="STRAYGODS Guild Logo" class="guild-logo">
+        </div>
+
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="about.html">ABOUT</a></li>
+                <li><a href="members.html">MEMBERS</a></li>
+                <li><a href="partylist.html">PARTY LIST</a></li>
+                <li><a href="events.html" class="active">EVENTS</a></li>
+                <li><a href="contact.html">CONTACT</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="events-container">
+            <div class="upcoming-events">
+                <h2 class="section-heading">Upcoming Events</h2>
+                <div id="events-calendar" class="events-grid">
+                    <!-- Events will be loaded here -->
+                </div>
+            </div>
+
+            <div class="weekly-schedule">
+                <h2 class="section-heading">Weekly Schedule</h2>
+                <div id="schedule-grid" class="schedule-grid">
+                    <!-- Schedule will be loaded here -->
+                </div>
+            </div>
+
+            <div class="special-events">
+                <h2 class="section-heading">Special Events</h2>
+                <div id="special-events" class="events-grid">
+                    <!-- Special events will be loaded here -->
+                </div>
+            </div>
+
+            <div class="past-events">
+                <h2 class="section-heading">Past Events</h2>
+                <div id="archive-grid" class="events-grid">
+                    <!-- Past events will be loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="members.html">Members</a></li>
+                    <li><a href="events.html">Events</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Discord: StrayGods Guild</p>
+                <p>Email: contact@straygodsguild.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">Discord</a>
+                    <a href="#" class="social-link">Twitter</a>
+                    <a href="#" class="social-link">YouTube</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 StrayGods. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Custom Scripts -->
+    <script type="module" src="js/config.js"></script>
+    <script type="module" src="js/sheets.js"></script>
+    <script type="module">
+        import { CONFIG } from './js/config.js';
+        import { fetchSheetData } from './js/sheets.js';
+
+        async function displayEvents() {
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            try {
+                console.log('Starting to fetch events data...');
+                
+                // Fetch events data from Google Sheets
+                console.log('Fetching from sheet:', CONFIG.SHEETS.EVENTS);
+                const events = await fetchSheetData(CONFIG.SHEETS.EVENTS);
+                console.log('Events data received:', events);
+
+                if (!events || events.length === 0) {
+                    throw new Error('No events data available');
+                }
+
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+                // Process events into categories
+                const categorizedEvents = {
+                    upcoming: [],
+                    weekly: [],
+                    special: [],
+                    past: []
+                };
+
+                events.forEach(event => {
+                    // Convert event date to Date object if it exists
+                    const eventDate = event.date ? new Date(event.date) : null;
+                    
+                    // Determine event category
+                    if (event.recurring === 'true' || event.recurring === true) {
+                        categorizedEvents.weekly.push(event);
+                    } else if (event.type?.toLowerCase() === 'special') {
+                        categorizedEvents.special.push(event);
+                        if (eventDate && eventDate >= today) {
+                            categorizedEvents.upcoming.push(event);
+                        } else {
+                            categorizedEvents.past.push(event);
+                        }
+                    } else if (eventDate) {
+                        if (eventDate >= today) {
+                            categorizedEvents.upcoming.push(event);
+                        } else {
+                            categorizedEvents.past.push(event);
+                        }
+                    }
+                });
+
+                // Sort events by date
+                const sortByDate = (a, b) => {
+                    if (!a.date) return 1;
+                    if (!b.date) return -1;
+                    return new Date(a.date) - new Date(b.date);
+                };
+
+                categorizedEvents.upcoming.sort(sortByDate);
+                categorizedEvents.past.sort((a, b) => sortByDate(b, a)); // Reverse sort for past events
+
+                // Display upcoming events
+                const eventsCalendar = document.getElementById('events-calendar');
+                if (categorizedEvents.upcoming.length > 0) {
+                    eventsCalendar.innerHTML = categorizedEvents.upcoming.map(event => `
+                        <div class="event-item ${(event.type || 'default').toLowerCase()}">
+                            <div class="event-header">
+                                <h3>${event.title || 'Untitled Event'}</h3>
+                                <span class="event-type">${event.type || 'General'}</span>
+                            </div>
+                            <div class="event-datetime">
+                                <i class="fas fa-calendar"></i>
+                                <span>${event.date ? new Date(event.date).toLocaleDateString() : 'Date TBA'}</span>
+                                <i class="fas fa-clock"></i>
+                                <span>${event.time || 'Time TBA'}</span>
+                            </div>
+                            <p class="event-description">${event.description || 'No description available.'}</p>
+                            ${event.registration ? '<button class="register-btn">Register Now</button>' : ''}
+                        </div>
+                    `).join('');
+                } else {
+                    eventsCalendar.innerHTML = '<div class="no-events">No upcoming events scheduled.</div>';
+                }
+
+                // Display weekly schedule
+                const scheduleGrid = document.getElementById('schedule-grid');
+                if (categorizedEvents.weekly.length > 0) {
+                    // Group events by day
+                    const weeklyByDay = {};
+                    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                    
+                    days.forEach(day => {
+                        weeklyByDay[day] = categorizedEvents.weekly
+                            .filter(event => event.day === day)
+                            .sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+                    });
+
+                    // Create schedule table
+                    const table = document.createElement('table');
+                    table.className = 'schedule-table';
+                    
+                    // Add header row
+                    const thead = document.createElement('thead');
+                    const headerRow = document.createElement('tr');
+                    days.forEach(day => {
+                        const th = document.createElement('th');
+                        th.textContent = day;
+                        headerRow.appendChild(th);
+                    });
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+
+                    // Find maximum events in a day
+                    const maxEvents = Math.max(...Object.values(weeklyByDay).map(events => events.length));
+
+                    // Create table body
+                    const tbody = document.createElement('tbody');
+                    for (let i = 0; i < maxEvents; i++) {
+                        const row = document.createElement('tr');
+                        days.forEach(day => {
+                            const cell = document.createElement('td');
+                            const event = weeklyByDay[day][i];
+                            
+                            if (event) {
+                                cell.innerHTML = `
+                                    <div class="schedule-event ${(event.type || 'default').toLowerCase()}">
+                                        <h4>${event.title || 'Untitled Event'}</h4>
+                                        <p class="event-time">${event.time || 'Time TBA'}</p>
+                                        <p class="event-description">${event.description || 'No description available.'}</p>
+                                    </div>
+                                `;
+                            }
+                            row.appendChild(cell);
+                        });
+                        tbody.appendChild(row);
+                    }
+                    table.appendChild(tbody);
+                    
+                    // Add reset notice
+                    const notice = document.createElement('div');
+                    notice.className = 'schedule-notice';
+                    notice.textContent = 'Weekly schedule resets every Monday at 00:00 server time.';
+                    
+                    scheduleGrid.innerHTML = '';
+                    scheduleGrid.appendChild(notice);
+                    scheduleGrid.appendChild(table);
+                } else {
+                    scheduleGrid.innerHTML = '<div class="no-events">No weekly events scheduled.</div>';
+                }
+
+                // Display special events
+                const specialEvents = document.getElementById('special-events');
+                if (categorizedEvents.special.length > 0) {
+                    specialEvents.innerHTML = categorizedEvents.special.map(event => `
+                        <div class="event-card">
+                            <img src="${event.image || 'images/default-event.jpg'}" 
+                                 alt="${event.title || 'Event'}"
+                                 onerror="this.onerror=null; this.src='images/default-event.jpg';">
+                            <div class="event-info">
+                                <h3>${event.title || 'Special Event'}</h3>
+                                <div class="event-datetime">
+                                    <span class="date">${event.date ? new Date(event.date).toLocaleDateString() : 'Date TBA'}</span>
+                                    <span class="time">${event.time || 'Time TBA'}</span>
+                                </div>
+                                <p>${event.description || 'Special event details coming soon.'}</p>
+                                <button class="rsvp-button" data-event-id="${event.id || ''}">RSVP Now</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    specialEvents.innerHTML = '<div class="no-events">No special events scheduled at this time.</div>';
+                }
+
+                // Display past events
+                const archiveGrid = document.getElementById('archive-grid');
+                if (categorizedEvents.past.length > 0) {
+                    archiveGrid.innerHTML = categorizedEvents.past.slice(0, 6).map(event => `
+                        <div class="archive-card">
+                            <div class="archive-content">
+                                <h3>${event.title || 'Past Event'}</h3>
+                                <p class="event-date">${event.date ? new Date(event.date).toLocaleDateString() : 'Date unknown'}</p>
+                                <p>${event.description || 'No description available.'}</p>
+                            </div>
+                            ${event.gallery ? '<button class="view-gallery-btn">View Gallery</button>' : ''}
+                        </div>
+                    `).join('');
+                } else {
+                    archiveGrid.innerHTML = '<div class="no-events">No past events to display.</div>';
+                }
+
+                // Add RSVP functionality
+                document.querySelectorAll('.rsvp-button').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const eventId = button.dataset.eventId;
+                        alert('RSVP functionality will be available soon!');
+                    });
+                });
+
+                // Remove loading state
+                document.body.classList.add('loaded');
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'none';
+                }
+
+            } catch (error) {
+                console.error('Error loading events:', error);
+                const mainContent = document.querySelector('main');
+                if (mainContent) {
+                    mainContent.innerHTML = `
+                        <div class="error-message">
+                            <h2>Unable to load events</h2>
+                            <p>We're experiencing technical difficulties. Please try again later.</p>
+                            <p class="error-details">${error.message}</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Load events when the page loads
+        document.addEventListener('DOMContentLoaded', displayEvents);
+    </script>
+</body>
+</html>

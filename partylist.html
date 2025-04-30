@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRAYGODS War Party List</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <header>
+        <div class="logo">
+            <img src="images/STRAYGODS_Logo.png" alt="STRAYGODS Guild Logo" class="guild-logo">
+        </div>
+
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="about.html">ABOUT</a></li>
+                <li><a href="members.html">MEMBERS</a></li>
+                <li><a href="partylist.html" class="active">PARTY LIST</a></li>
+                <li><a href="events.html">EVENTS</a></li>
+                <li><a href="contact.html">CONTACT</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>WAR PARTY LIST</h1>
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="woc">War of Crystal</button>
+            <button class="tab-btn" data-tab="woe">War of Emperium</button>
+        </div>
+
+        <section id="woc-section" class="party-section active">
+            <h2 class="section-heading">War of Crystal</h2>
+            <div class="party-grid" id="woc-grid">
+                <!-- WOC teams will be loaded here -->
+            </div>
+        </section>
+
+        <section id="woe-section" class="party-section">
+            <h2 class="section-heading">War of Emperium</h2>
+            <div class="party-grid" id="woe-grid">
+                <!-- WOE teams will be loaded here -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="members.html">Members</a></li>
+                    <li><a href="events.html">Events</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Discord: StrayGods Guild</p>
+                <p>Email: contact@straygodsguild.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">Discord</a>
+                    <a href="#" class="social-link">Twitter</a>
+                    <a href="#" class="social-link">YouTube</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 StrayGods. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Custom Scripts -->
+    <script type="module" src="js/config.js"></script>
+    <script type="module" src="js/sheets.js"></script>
+    <script type="module">
+        import { CONFIG } from './js/config.js';
+        import { fetchSheetData } from './js/sheets.js';
+
+        async function displayPartyList(type) {
+            const grid = document.getElementById(`${type}-grid`);
+            const loadingOverlay = document.querySelector('.loading-overlay');
+
+            try {
+                console.log(`Fetching ${type} party list...`);
+                
+                // Get the exact sheet name from CONFIG
+                const sheetName = type === 'woc' ? CONFIG.SHEETS.WOC_PARTY : CONFIG.SHEETS.WOE_PARTY;
+                console.log(`Using sheet name: ${sheetName}`);
+                
+                const data = await fetchSheetData(sheetName);
+                console.log(`Raw data for ${type}:`, data);
+
+                if (!data || data.length === 0) {
+                    throw new Error(`No data received from sheet: ${sheetName}`);
+                }
+
+                // Process the data into teams
+                const teams = processTeamData(data);
+                console.log(`Processed ${type} teams:`, teams);
+                
+                // Display the teams
+                displayTeams(teams, grid);
+
+            } catch (error) {
+                console.error(`Error loading ${type} party list:`, error);
+                grid.innerHTML = `
+                    <div class="error-message">
+                        <h3>Unable to load party data</h3>
+                        <p>Please try again later.</p>
+                        <p class="error-details">${error.message}</p>
+                    </div>`;
+            }
+        }
+
+        function processTeamData(data) {
+            try {
+                // Group members by team
+                const teams = new Map();
+                
+                data.forEach(row => {
+                    if (!row.team_name) {
+                        console.warn('Row missing team name:', row);
+                        return;
+                    }
+
+                    if (!teams.has(row.team_name)) {
+                        teams.set(row.team_name, {
+                            name: row.team_name,
+                            leader: row.team_leader || 'TBD',
+                            members: []
+                        });
+                    }
+
+                    const team = teams.get(row.team_name);
+                    team.members.push({
+                        name: row.player_name || 'Unknown',
+                        class: row.class || 'Unknown Class',
+                        role: row.role || 'Member',
+                        level: row.level || '??'
+                    });
+                });
+
+                // Convert Map to array and sort teams
+                return Array.from(teams.values())
+                    .sort((a, b) => a.name.localeCompare(b.name));
+
+            } catch (error) {
+                console.error('Error processing team data:', error);
+                throw new Error('Failed to process team data: ' + error.message);
+            }
+        }
+
+        function displayTeams(teams, grid) {
+            if (!teams || teams.length === 0) {
+                grid.innerHTML = '<div class="no-teams">No teams available at this time.</div>';
+                return;
+            }
+
+            grid.innerHTML = teams.map(team => `
+                <div class="party-card">
+                    <div class="party-header">
+                        <h3 class="party-name">${team.name}</h3>
+                        <p class="party-leader">Leader: ${team.leader}</p>
+                    </div>
+                    <ul class="party-members">
+                        ${team.members.map(member => `
+                            <li class="party-member">
+                                <div class="member-info">
+                                    <img src="images/${member.class.replace(/\s+/g, '')}.png" 
+                                         alt="${member.class}" 
+                                         class="member-class-icon"
+                                         onerror="this.onerror=null; this.src='images/STRAYGODS_Logo.png';">
+                                    <div class="member-details">
+                                        <span class="member-name">${member.name}</span>
+                                        <span class="member-role">${member.role}</span>
+                                        <span class="member-class ${member.class.toLowerCase().replace(/\s+/g, '-')}">${member.class}</span>
+                                        <span class="member-level">Lv.${member.level}</span>
+                                    </div>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `).join('');
+
+            // Add animation classes
+            const cards = grid.querySelectorAll('.party-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('visible');
+                }, index * 100);
+            });
+        }
+
+        // Tab switching functionality
+        const tabs = document.querySelectorAll('.tab-btn');
+        const sections = document.querySelectorAll('.party-section');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const type = tab.dataset.tab;
+                
+                // Update active states
+                tabs.forEach(t => t.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(`${type}-section`).classList.add('active');
+
+                // Show loading state
+                const loadingOverlay = document.querySelector('.loading-overlay');
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'flex';
+                }
+
+                // Load data for the selected tab
+                displayPartyList(type).finally(() => {
+                    // Hide loading state
+                    if (loadingOverlay) {
+                        loadingOverlay.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'flex';
+            }
+
+            displayPartyList('woc').finally(() => {
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

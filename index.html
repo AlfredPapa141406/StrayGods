@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRAYGODS Guild - Home</title>
+    <!-- Google Fonts - Cinzel for God of War style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="home-page">
+    <div id="loading" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <header>
+        <div class="logo">
+            <img src="images/STRAYGODS_Logo.png" alt="STRAYGODS Guild Logo" class="guild-logo">
+        </div>
+
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html" class="active">HOME</a></li>
+                <li><a href="about.html">ABOUT</a></li>
+                <li><a href="members.html">MEMBERS</a></li>
+                <li><a href="partylist.html">PARTY LIST</a></li>
+                <li><a href="events.html">EVENTS</a></li>
+                <li><a href="contact.html">CONTACT</a></li>
+            </ul>
+        </nav>
+        <button class="mobile-menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <div class="hero-text-content">
+                    <h1 id="hero-title">STRAYGODS</h1>
+                    <p id="hero-subtitle" class="hero-text">Elite Gaming Community | Dominating Since 2023</p>
+                </div>
+                
+                <div id="hero-stats" class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="stat-value">500+</span>
+                        <span class="stat-label">Active Members</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="stat-value">100+</span>
+                        <span class="stat-label">MVP Hunts</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="stat-value">#1</span>
+                        <span class="stat-label">WoE Ranking</span>
+                    </div>
+                </div>
+
+                <div class="hero-cta">
+                    <a href="contact.html" id="hero-cta" class="cta-button">Join the Elite</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <h2 class="section-heading">Guild Features</h2>
+            <div id="features-grid" class="features-grid">
+                <!-- Features will be loaded here -->
+            </div>
+        </section>
+
+        <section class="guild-stats">
+            <h2 class="section-heading">Guild Statistics</h2>
+            <div id="stats-grid" class="stats-grid">
+                <!-- Stats will be loaded dynamically -->
+            </div>
+        </section>
+
+        <section class="latest-news">
+            <h2 class="section-heading">Latest News</h2>
+            <div id="news-grid" class="news-grid">
+                <!-- News will be loaded here -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="members.html">Members</a></li>
+                    <li><a href="events.html">Events</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Discord: StrayGods Guild</p>
+                <p>Email: </p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">Discord</a>
+                    <a href="#" class="social-link">Twitter</a>
+                    <a href="#" class="social-link">YouTube</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 StrayGods. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Custom Scripts -->
+    <script type="module" src="js/config.js"></script>
+    <script type="module" src="js/sheets.js"></script>
+    <script type="module">
+        import { CONFIG } from './js/config.js';
+        import { fetchSheetData } from './js/sheets.js';
+
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+            const mainNav = document.querySelector('.main-nav');
+            
+            if (mobileMenuToggle && mainNav) {
+                mobileMenuToggle.addEventListener('click', () => {
+                    mainNav.classList.toggle('active');
+                    mobileMenuToggle.classList.toggle('active');
+                    const icon = mobileMenuToggle.querySelector('i');
+                    if (icon) {
+                        icon.classList.toggle('fa-bars');
+                        icon.classList.toggle('fa-times');
+                    }
+                });
+            }
+        });
+
+        async function displayHomeContent() {
+            const loadingOverlay = document.getElementById('loading');
+            
+            try {
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'flex';
+                }
+
+                console.log('Starting to fetch home content...');
+
+                // Fetch all data from Google Sheets
+                console.log('Fetching data from sheets...');
+                const [hero, features, stats, news] = await Promise.all([
+                    fetchSheetData(CONFIG.SHEETS.HERO),
+                    fetchSheetData(CONFIG.SHEETS.FEATURES),
+                    fetchSheetData(CONFIG.SHEETS.STATS),
+                    fetchSheetData(CONFIG.SHEETS.NEWS)
+                ]);
+                
+                console.log('Home data loaded:', { hero, features, stats, news });
+
+                // Check for missing data
+                if (!hero?.length) console.error('No hero data received');
+                if (!features?.length) console.error('No features data received');
+                if (!stats?.length) console.error('No stats data received');
+                if (!news?.length) console.error('No news data received');
+
+                // Display hero content
+                const heroTitle = document.getElementById('hero-title');
+                const heroSubtitle = document.getElementById('hero-subtitle');
+                const heroStats = document.getElementById('hero-stats');
+                const ctaButton = document.getElementById('hero-cta');
+
+                if (hero && hero.length > 0) {
+                    const heroData = hero[0];
+                    
+                    if (heroTitle) heroTitle.textContent = heroData.title || 'STRAYGODS';
+                    if (heroSubtitle) heroSubtitle.textContent = heroData.subtitle || 'Elite Gaming Community';
+                    
+                    if (heroStats) {
+                        heroStats.innerHTML = `
+                            <div class="hero-stat">
+                                <span class="stat-value">${heroData.members_count || '500+'}</span>
+                                <span class="stat-label">${heroData.members_label || 'Active Members'}</span>
+                            </div>
+                            <div class="hero-stat">
+                                <span class="stat-value">${heroData.mvp_count || '100+'}</span>
+                                <span class="stat-label">${heroData.mvp_label || 'MVP Hunts'}</span>
+                            </div>
+                            <div class="hero-stat">
+                                <span class="stat-value">${heroData.woe_count || '#1'}</span>
+                                <span class="stat-label">${heroData.woe_label || 'WoE Ranking'}</span>
+                            </div>
+                        `;
+                    }
+                    
+                    if (ctaButton) {
+                        ctaButton.textContent = heroData.cta_text || 'Join the Elite';
+                        if (heroData.cta_link) ctaButton.href = heroData.cta_link;
+                    }
+                }
+
+                // Display features
+                const featuresGrid = document.getElementById('features-grid');
+                if (featuresGrid && features?.length > 0) {
+                    featuresGrid.innerHTML = features.map(feature => `
+                        <div class="feature-card">
+                            <i class="fas ${feature.icon || 'fa-star'}"></i>
+                            <h3>${feature.title || 'Feature'}</h3>
+                            <p>${feature.description || 'Description coming soon.'}</p>
+                        </div>
+                    `).join('');
+                }
+
+                // Display stats
+                const statsGrid = document.getElementById('stats-grid');
+                if (statsGrid && stats?.length > 0) {
+                    statsGrid.innerHTML = stats.map(stat => `
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas ${stat.icon || 'fa-chart-bar'}"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3>${stat.title || 'Stat'}</h3>
+                                <p class="stat-value">${stat.value || '0'}</p>
+                                <p class="stat-description">${stat.description || ''}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                // Display news
+                const newsGrid = document.getElementById('news-grid');
+                if (newsGrid && news?.length > 0) {
+                    newsGrid.innerHTML = news.map(item => `
+                        <div class="news-card">
+                            <div class="news-content">
+                                <h3>${item.title || 'News'}</h3>
+                                <p class="news-date">${item.date ? new Date(item.date).toLocaleDateString() : 'Recent'}</p>
+                                <p class="news-excerpt">${item.excerpt || item.content || 'More details coming soon.'}</p>
+                            </div>
+                            ${item.link ? `<a href="${item.link}" class="read-more">Read More</a>` : ''}
+                        </div>
+                    `).join('');
+                }
+
+                // Add animation classes
+                document.querySelectorAll('.feature-card, .stat-card, .news-card').forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                    }, index * 100);
+                });
+
+            } catch (error) {
+                console.error('Error loading home content:', error);
+                const main = document.querySelector('main');
+                if (main) {
+                    main.innerHTML = `
+                        <div class="error-message">
+                            <h2>Unable to load content</h2>
+                            <p>We're experiencing technical difficulties. Please try again later.</p>
+                            <p class="error-details">${error.message}</p>
+                        </div>
+                    `;
+                }
+            } finally {
+                if (loadingOverlay) {
+                    loadingOverlay.style.display = 'none';
+                }
+            }
+        }
+
+        // Load content when the page loads
+        document.addEventListener('DOMContentLoaded', displayHomeContent);
+    </script>
+</body>
+</html>
