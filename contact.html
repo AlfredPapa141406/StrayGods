@@ -31,74 +31,98 @@
     </header>
 
     <main>
+        <div class="contact-hero">
+            <div class="contact-hero-content">
+                <h1>Join Our Guild</h1>
+                <p>Become part of an elite community of adventurers</p>
+            </div>
+        </div>
+
         <div class="contact-container">
-            <section class="contact-section">
-                <h2 class="section-heading">Join Our Guild</h2>
+            <section class="contact-section join-section">
+                <div class="section-header">
+                    <i class="fas fa-users section-icon"></i>
+                    <h2 class="section-heading">Join STRAYGODS</h2>
+                    <div class="section-divider"></div>
+                </div>
+
                 <div id="join-info" class="content-text">
                     <!-- Join info will be loaded here -->
                 </div>
                 
                 <div class="contact-form">
-                    <h3>Application Form</h3>
-                    <form id="application-form">
-                        <div class="form-group">
-                            <label for="name">Character Name</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="class">Character Class</label>
-                            <select id="class" name="class" required>
-                                <option value="">Select your class</option>
-                                <option value="Swordsman">Swordsman</option>
-                                <option value="Mage">Mage</option>
-                                <option value="Thief">Thief</option>
-                                <option value="Archer">Archer</option>
-                                <option value="Acolyte">Acolyte</option>
-                                <option value="Merchant">Merchant</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="level">Base Level</label>
-                            <input type="number" id="level" name="level" min="1" max="99" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="discord">Discord Username</label>
-                            <input type="text" id="discord" name="discord" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Why do you want to join STRAYGODS?</label>
-                            <textarea id="message" name="message" rows="4" required></textarea>
-                        </div>
-                        <button type="submit" class="btn">Submit Application</button>
-                    </form>
+                    <h3><i class="fas fa-scroll"></i> Application Form</h3>
+                    <p class="form-description">To apply for STRAYGODS Guild membership, please click the button below to fill out our application form.</p>
+                    <div class="form-button-container">
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSe8yfGxCbDg69Yoy_zeXFhhCPkcPknSyAAa0m6dSA6k-8SU-A/viewform?usp=sharing" target="_blank" class="btn btn-primary">
+                            <i class="fas fa-external-link-alt"></i> Apply via Google Form
+                        </a>
+                    </div>
                 </div>
             </section>
 
-            <section class="contact-section">
-                <h2 class="section-heading">Other Ways to Contact Us</h2>
-                <div class="contact-info">
-                    <div class="contact-method">
+            <section class="contact-section connect-section">
+                <div class="section-header">
+                    <i class="fas fa-comments section-icon"></i>
+                    <h2 class="section-heading">Connect With Us</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <div class="contact-grid">
+                    <div class="contact-method-card discord">
                         <i class="fab fa-discord contact-icon"></i>
-                        <div>
-                            <h3>Discord</h3>
-                            <p>Join our Discord server</p>
-                            <a href="#" class="btn">Join Server</a>
+                        <div class="contact-method-content">
+                            <h3>Discord Community</h3>
+                            <p>Join our active Discord community</p>
+                            <a href="#" class="btn btn-secondary">
+                                <i class="fas fa-headset"></i> Join Server
+                            </a>
                         </div>
                     </div>
-                    <div class="contact-method">
+
+                    <div class="contact-method-card email">
                         <i class="fas fa-envelope contact-icon"></i>
-                        <div>
-                            <h3>Email</h3>
-                            <p>contact@straygodsguild.com</p>
+                        <div class="contact-method-content">
+                            <h3>Email Us</h3>
+                            <p>Get in touch via email</p>
+                            <a href="mailto:contact@straygodsguild.com" class="contact-link">
+                                contact@straygodsguild.com
+                            </a>
                         </div>
                     </div>
-                    <div class="contact-method">
+
+                    <div class="contact-method-card facebook">
                         <i class="fab fa-facebook contact-icon"></i>
-                        <div>
+                        <div class="contact-method-content">
                             <h3>Facebook</h3>
-                            <p>Follow us on Facebook</p>
-                            <a href="#" class="btn">Follow Us</a>
+                            <p>Follow our Facebook page</p>
+                            <a href="#" class="btn btn-secondary">
+                                <i class="fas fa-thumbs-up"></i> Follow Us
+                            </a>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="contact-section faq-section">
+                <div class="section-header">
+                    <i class="fas fa-question-circle section-icon"></i>
+                    <h2 class="section-heading">Frequently Asked Questions</h2>
+                    <div class="section-divider"></div>
+                </div>
+
+                <div class="faq-grid">
+                    <div class="faq-card">
+                        <h3><i class="fas fa-star"></i> What are the requirements to join?</h3>
+                        <p>We welcome dedicated players who are active, friendly, and willing to contribute to our community. Specific level and class requirements may vary.</p>
+                    </div>
+                    <div class="faq-card">
+                        <h3><i class="fas fa-clock"></i> How long does the application process take?</h3>
+                        <p>Applications are typically reviewed within 48-72 hours. You'll receive a response through Discord or email.</p>
+                    </div>
+                    <div class="faq-card">
+                        <h3><i class="fas fa-users"></i> What activities does the guild participate in?</h3>
+                        <p>We organize regular WoE events, guild dungeons, social gatherings, and collaborative activities for all members.</p>
                     </div>
                 </div>
             </section>
@@ -139,12 +163,10 @@
     <!-- Custom Scripts -->
     <script type="module" src="js/config.js"></script>
     <script type="module" src="js/sheets.js"></script>
-    <script type="module" src="js/test-connections.js"></script>
     <script type="module">
         import { fetchSheetData } from './js/sheets.js';
-        import { connectionTester } from './js/test-connections.js';
 
-        async function handleContactForm() {
+        async function loadContactContent() {
             const loadingOverlay = document.getElementById('loading');
             
             try {
@@ -160,17 +182,6 @@
                 const info = contact.find(section => section.type === 'join_info');
                 if (info) {
                     joinInfo.innerHTML = info.content;
-                }
-
-                // Handle form submission
-                const form = document.getElementById('application-form');
-                if (form) {
-                    form.addEventListener('submit', async (e) => {
-                        e.preventDefault();
-                        // Add your form submission logic here
-                        alert('Application submitted successfully!');
-                        form.reset();
-                    });
                 }
 
             } catch (error) {
@@ -191,7 +202,7 @@
         }
 
         // Load content when the page loads
-        document.addEventListener('DOMContentLoaded', handleContactForm);
+        document.addEventListener('DOMContentLoaded', loadContactContent);
     </script>
 </body>
 </html>

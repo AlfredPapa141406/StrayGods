@@ -2185,3 +2185,291 @@ footer {
     gap: 1.5rem;
     padding: 0.5rem;
 }
+
+.form-description {
+    text-align: center;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.form-button-container {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.btn-primary {
+    background: var(--accent-color);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    border: 2px solid var(--accent-color);
+}
+
+.btn-primary:hover {
+    background: transparent;
+    color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(26, 156, 176, 0.2);
+}
+
+.btn-primary i {
+    font-size: 0.9em;
+}
+
+/* Contact Hero Section */
+.contact-hero {
+    background: linear-gradient(rgba(10, 31, 46, 0.8), rgba(10, 31, 46, 0.9)), url('../images/STRAYGODS_Logo.png');
+    background-size: contain;
+    background-position: right;
+    background-repeat: no-repeat;
+    padding: 6rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, var(--secondary-color), transparent);
+    z-index: 1;
+}
+
+.contact-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.contact-hero h1 {
+    color: var(--accent-color);
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.contact-hero p {
+    color: var(--text-light);
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* Section Headers */
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.section-icon {
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+}
+
+.section-divider {
+    width: 60px;
+    height: 3px;
+    background: var(--accent-color);
+    margin: 1rem auto 0;
+    position: relative;
+}
+
+.section-divider::before,
+.section-divider::after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 1px;
+    background: var(--accent-color);
+    top: 50%;
+}
+
+.section-divider::before {
+    left: -50px;
+}
+
+.section-divider::after {
+    right: -50px;
+}
+
+/* Contact Method Cards */
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.contact-method-card {
+    background: rgba(26, 156, 176, 0.1);
+    border: 1px solid var(--metallic-gray);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-method-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.contact-method-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-color);
+    box-shadow: 0 10px 20px rgba(26, 156, 176, 0.2);
+}
+
+.contact-method-card:hover::before {
+    transform: scaleX(1);
+}
+
+.contact-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: var(--accent-color);
+    transition: transform 0.3s ease;
+}
+
+.contact-method-card:hover .contact-icon {
+    transform: scale(1.1);
+}
+
+.contact-method-content h3 {
+    color: var(--text-light);
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+.contact-method-content p {
+    color: var(--metallic-gray);
+    margin-bottom: 1.5rem;
+}
+
+.contact-link {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.contact-link:hover {
+    color: var(--primary-color);
+}
+
+/* FAQ Section */
+.faq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.faq-card {
+    background: rgba(26, 156, 176, 0.1);
+    border: 1px solid var(--metallic-gray);
+    border-radius: 15px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.faq-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-color);
+    box-shadow: 0 5px 15px rgba(26, 156, 176, 0.2);
+}
+
+.faq-card h3 {
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.faq-card h3 i {
+    font-size: 1rem;
+}
+
+.faq-card p {
+    color: var(--metallic-gray);
+    line-height: 1.6;
+}
+
+/* Button Styles */
+.btn-secondary {
+    background: rgba(26, 156, 176, 0.2);
+    color: var(--text-light);
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    border: 1px solid var(--metallic-gray);
+}
+
+.btn-secondary:hover {
+    background: var(--accent-color);
+    color: var(--text-dark);
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .contact-hero {
+        padding: 4rem 1rem;
+    }
+
+    .contact-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .contact-hero p {
+        font-size: 1rem;
+    }
+
+    .contact-grid,
+    .faq-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .contact-method-card,
+    .faq-card {
+        padding: 1.5rem;
+    }
+
+    .section-icon {
+        font-size: 2rem;
+    }
+}
