@@ -202,7 +202,7 @@
 
                     leadershipGrid.innerHTML = sortedLeadership.map(leader => `
                         <div class="leader-card" data-role="${(leader.role || '').toLowerCase().replace(/\s+/g, '-')}">
-                            <img src="images/${leader.class || 'default'}.png" 
+                            <img src="images/${(leader.class || 'default').replace(/\s+/g, '')}.png" 
                                  alt="${leader.class || 'Member'} Icon" 
                                  class="member-avatar"
                                  onerror="this.onerror=null; this.src='images/STRAYGODS_Logo.png';">
