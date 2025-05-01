@@ -17,7 +17,6 @@ export const CONFIG = {
         ACTIVITIES: 'Activities',
         APPLICATIONS: 'Applications',
         LEADERSHIP: 'Guild Leadership',
-        WOC_PARTY: 'WoC Party',
-        WOE_PARTY: 'WoE Party'
+        PARTY: 'WoE_WoC Party'
     }
 }; 

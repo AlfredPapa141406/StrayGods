@@ -1,9 +1,10 @@
 import { CONFIG } from './config.js';
 
 // Function to fetch data from Google Sheets
-export async function fetchSheetData(sheetName) {
+export async function fetchSheetData(sheetName, options = { raw: false }) {
     try {
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SHEETS_ID}/values/${sheetName}?key=${CONFIG.API_KEY}`;
+        const encodedSheetName = encodeURIComponent(sheetName);
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SHEETS_ID}/values/${encodedSheetName}?key=${CONFIG.API_KEY}`;
         const response = await fetch(url);
         
         if (!response.ok) {
@@ -15,6 +16,11 @@ export async function fetchSheetData(sheetName) {
         if (!data.values || data.values.length < 2) {
             console.warn(`No data found in sheet: ${sheetName}`);
             return [];
+        }
+
+        // If raw option is true, return the raw values
+        if (options.raw) {
+            return data.values;
         }
 
         // Get headers from the first row

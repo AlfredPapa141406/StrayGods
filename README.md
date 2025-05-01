@@ -73,8 +73,7 @@ git clone [repository-url]
 
 3. Set up Google Sheets:
 - Create sheets named:
-  - "WoC Party"
-  - "WoE Party"
+  - "WoE_WoC Party"
   - "Members"
   - Other content sheets
 

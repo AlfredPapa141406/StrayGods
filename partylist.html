@@ -3,11 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STRAYGODS War Party List</title>
+    <title>Party List - STRAYGODS Guild</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Party List specific styles */
+        .party-content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .party-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 0;
+            position: relative;
+        }
+
+        .party-header h2 {
+            color: var(--accent-color);
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 0;
+            padding: 0 2rem;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(26, 156, 176, 0.3);
+        }
+
+        .party-header h2::before,
+        .party-header h2::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 60px;
+            height: 3px;
+            background: var(--accent-color);
+            transform: translateY(-50%);
+        }
+
+        .party-header h2::before {
+            left: -30px;
+        }
+
+        .party-header h2::after {
+            right: -30px;
+        }
+
+        .party-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .team-column {
+            background: rgba(26, 156, 176, 0.05);
+            border: 1px solid var(--metallic-gray);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-column::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent-color);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .team-column:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .team-column:hover::before {
+            transform: scaleX(1);
+        }
+
+        .team-header {
+            text-align: center;
+            color: var(--accent-color);
+            font-size: 1.5em;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--metallic-gray);
+        }
+
+        .sub-team {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sub-team-header {
+            color: var(--accent-color);
+            font-size: 1.2em;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--metallic-gray);
+        }
+
+        .member-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin: 0.5rem 0;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .member-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-color);
+            transform: translateX(5px);
+        }
+
+        .member-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .member-class {
+            color: var(--accent-color);
+            margin-left: 1rem;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .party-leader {
+            color: var(--leader-color);
+            font-weight: bold;
+        }
+
+        .tank-devo {
+            color: var(--tank-color);
+        }
+
+        .support {
+            color: var(--support-color);
+        }
+
+        .summoner {
+            color: var(--summoner-color);
+        }
+
+        .error-message {
+            text-align: center;
+            color: #ff4444;
+            padding: 2rem;
+            background: rgba(255, 68, 68, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 68, 68, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .party-content {
+                padding: 1rem;
+            }
+
+            .party-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .party-header {
+                padding: 1.5rem 0;
+            }
+
+            .party-header h2 {
+                font-size: 2rem;
+                padding: 0 1.5rem;
+            }
+
+            .party-header h2::before,
+            .party-header h2::after {
+                width: 40px;
+            }
+
+            .party-header h2::before {
+                left: -20px;
+            }
+
+            .party-header h2::after {
+                right: -20px;
+            }
+
+            .team-column {
+                padding: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="loading-overlay">
@@ -32,23 +245,13 @@
     </header>
 
     <main>
-        <h1>WAR PARTY LIST</h1>
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="woc">War of Crystal</button>
-            <button class="tab-btn" data-tab="woe">War of Emperium</button>
-        </div>
-
-        <section id="woc-section" class="party-section active">
-            <h2 class="section-heading">War of Crystal</h2>
-            <div class="party-grid" id="woc-grid">
-                <!-- WOC teams will be loaded here -->
+        <section class="party-content">
+            <div class="party-header">
+                <h2>War Party List</h2>
             </div>
-        </section>
-
-        <section id="woe-section" class="party-section">
-            <h2 class="section-heading">War of Emperium</h2>
-            <div class="party-grid" id="woe-grid">
-                <!-- WOE teams will be loaded here -->
+            
+            <div class="party-grid" id="party-grid">
+                <div class="loading-message">Loading party list...</div>
             </div>
         </section>
     </main>
@@ -58,29 +261,30 @@
             <div class="footer-section">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="members.html">Members</a></li>
-                    <li><a href="events.html">Events</a></li>
-                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="index.html">HOME</a></li>
+                    <li><a href="about.html">ABOUT</a></li>
+                    <li><a href="members.html">MEMBERS</a></li>
+                    <li><a href="partylist.html" class="active">PARTY LIST</a></li>
+                    <li><a href="events.html">EVENTS</a></li>
+                    <li><a href="contact.html">CONTACT</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h3>Contact Us</h3>
-                <p>Discord: StrayGods Guild</p>
+                <p>Discord: STRAYGODS Guild</p>
                 <p>Email: contact@straygodsguild.com</p>
             </div>
             <div class="footer-section">
                 <h3>Follow Us</h3>
                 <div class="social-links">
                     <a href="#" class="social-link">Discord</a>
+                    <a href="#" class="social-link">Facebook</a>
                     <a href="#" class="social-link">Twitter</a>
-                    <a href="#" class="social-link">YouTube</a>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 StrayGods. All rights reserved.</p>
+            <p>&copy; 2025 STRAYGODS. All rights reserved.</p>
         </div>
     </footer>
 
@@ -91,165 +295,169 @@
         import { CONFIG } from './js/config.js';
         import { fetchSheetData } from './js/sheets.js';
 
-        async function displayPartyList(type) {
-            const grid = document.getElementById(`${type}-grid`);
-            const loadingOverlay = document.querySelector('.loading-overlay');
+        function getMemberClass(className) {
+            if (!className) return '';
+            className = className.toLowerCase();
+            if (className.includes('royal')) return 'tank-devo';
+            if (className.includes('archbishop') || className.includes('archbi')) return 'support';
+            if (className.includes('sorcerer')) return 'summoner';
+            if (className.includes('warlock')) return 'summoner';
+            if (className.includes('shura')) return 'tank-devo';
+            if (className.includes('mechanic')) return 'support';
+            if (className.includes('genetic')) return 'support';
+            if (className.includes('guillotine')) return 'tank-devo';
+            return '';
+        }
+
+        function processSheetData(rawData) {
+            if (!Array.isArray(rawData) || rawData.length === 0) {
+                console.log('No data or invalid data received');
+                return {};
+            }
+
+            // Find the row with team names (contains "ALPHA TEAM")
+            const teamHeaderRow = rawData.findIndex(row => 
+                Array.isArray(row) && row.some(cell => cell && typeof cell === 'string' && cell.includes('TEAM'))
+            );
+
+            if (teamHeaderRow === -1) {
+                console.log('No team header row found');
+                return {};
+            }
+
+            // Initialize teams object
+            const teams = {};
+
+            // Get team names and their column indices
+            rawData[teamHeaderRow].forEach((cell, index) => {
+                if (cell && typeof cell === 'string' && cell.includes('TEAM')) {
+                    const teamName = cell.trim();
+                    teams[teamName] = {
+                        name: teamName,
+                        subTeams: {}
+                    };
+                }
+            });
+
+            // Process each column for team data
+            Object.keys(teams).forEach(teamName => {
+                const teamColIndex = rawData[teamHeaderRow].findIndex(cell => 
+                    cell && cell.trim() === teamName
+                );
+
+                if (teamColIndex === -1) return;
+
+                let currentSubTeam = null;
+
+                // Process rows after team header
+                for (let i = teamHeaderRow + 1; i < rawData.length; i++) {
+                    const row = rawData[i];
+                    if (!Array.isArray(row)) continue;
+
+                    const memberName = row[teamColIndex];
+                    const memberClass = row[teamColIndex + 1];
+
+                    // Check if this is a sub-team header
+                    if (memberName && memberName.match(/^[A-Z]+\s*\d+$/)) {
+                        currentSubTeam = memberName.trim();
+                        if (!teams[teamName].subTeams[currentSubTeam]) {
+                            teams[teamName].subTeams[currentSubTeam] = [];
+                        }
+                    }
+                    // If we have valid member data and a current sub-team
+                    else if (currentSubTeam && memberName && memberClass && 
+                            !memberName.includes('CLASS')) {
+                        teams[teamName].subTeams[currentSubTeam].push({
+                            name: memberName.trim(),
+                            class: memberClass.trim()
+                        });
+                    }
+                }
+            });
+
+            console.log('Processed teams:', teams);
+            return teams;
+        }
+
+        function displayTeams(data, grid) {
+            if (!data || !Array.isArray(data)) {
+                grid.innerHTML = '<div class="error-message">No teams available at this time.</div>';
+                return;
+            }
 
             try {
-                console.log(`Fetching ${type} party list...`);
+                const teams = processSheetData(data);
                 
-                // Get the exact sheet name from CONFIG
-                const sheetName = type === 'woc' ? CONFIG.SHEETS.WOC_PARTY : CONFIG.SHEETS.WOE_PARTY;
-                console.log(`Using sheet name: ${sheetName}`);
-                
-                const data = await fetchSheetData(sheetName);
-                console.log(`Raw data for ${type}:`, data);
-
-                if (!data || data.length === 0) {
-                    throw new Error(`No data received from sheet: ${sheetName}`);
+                if (Object.keys(teams).length === 0) {
+                    grid.innerHTML = '<div class="error-message">No team data available.</div>';
+                    return;
                 }
 
-                // Process the data into teams
-                const teams = processTeamData(data);
-                console.log(`Processed ${type} teams:`, teams);
-                
-                // Display the teams
-                displayTeams(teams, grid);
+                grid.innerHTML = Object.values(teams).map(team => `
+                    <div class="team-column">
+                        <div class="team-header">${team.name}</div>
+                        ${Object.entries(team.subTeams).map(([subTeamName, members]) => `
+                            <div class="sub-team">
+                                <div class="sub-team-header">${subTeamName}</div>
+                                <ul class="member-list">
+                                    ${members.map(member => `
+                                        <li class="member-item ${getMemberClass(member.class)}">
+                                            <span class="member-name">${member.name}</span>
+                                            <span class="member-class">${member.class}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('');
+
+                // Add animation classes after rendering
+                const teamColumns = grid.querySelectorAll('.team-column');
+                teamColumns.forEach((column, index) => {
+                    setTimeout(() => {
+                        column.style.opacity = '1';
+                        column.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
 
             } catch (error) {
-                console.error(`Error loading ${type} party list:`, error);
+                console.error('Error processing team data:', error);
                 grid.innerHTML = `
                     <div class="error-message">
-                        <h3>Unable to load party data</h3>
+                        <h3>Error processing team data</h3>
                         <p>Please try again later.</p>
                         <p class="error-details">${error.message}</p>
                     </div>`;
             }
         }
 
-        function processTeamData(data) {
-            try {
-                // Group members by team
-                const teams = new Map();
-                
-                data.forEach(row => {
-                    if (!row.team_name) {
-                        console.warn('Row missing team name:', row);
-                        return;
-                    }
-
-                    if (!teams.has(row.team_name)) {
-                        teams.set(row.team_name, {
-                            name: row.team_name,
-                            leader: row.team_leader || 'TBD',
-                            members: []
-                        });
-                    }
-
-                    const team = teams.get(row.team_name);
-                    team.members.push({
-                        name: row.player_name || 'Unknown',
-                        class: row.class || 'Unknown Class',
-                        role: row.role || 'Member',
-                        level: row.level || '??'
-                    });
-                });
-
-                // Convert Map to array and sort teams
-                return Array.from(teams.values())
-                    .sort((a, b) => a.name.localeCompare(b.name));
-
-            } catch (error) {
-                console.error('Error processing team data:', error);
-                throw new Error('Failed to process team data: ' + error.message);
-            }
-        }
-
-        function displayTeams(teams, grid) {
-            if (!teams || teams.length === 0) {
-                grid.innerHTML = '<div class="no-teams">No teams available at this time.</div>';
-                return;
-            }
-
-            grid.innerHTML = teams.map(team => `
-                <div class="party-card">
-                    <div class="party-header">
-                        <h3 class="party-name">${team.name}</h3>
-                        <p class="party-leader">Leader: ${team.leader}</p>
-                    </div>
-                    <ul class="party-members">
-                        ${team.members.map(member => `
-                            <li class="party-member">
-                                <div class="member-info">
-                                    <img src="images/${member.class.replace(/\s+/g, '')}.png" 
-                                         alt="${member.class}" 
-                                         class="member-class-icon"
-                                         onerror="this.onerror=null; this.src='images/STRAYGODS_Logo.png';">
-                                    <div class="member-details">
-                                        <span class="member-name">${member.name}</span>
-                                        <span class="member-role">${member.role}</span>
-                                        <span class="member-class ${member.class.toLowerCase().replace(/\s+/g, '-')}">${member.class}</span>
-                                        <span class="member-level">Lv.${member.level}</span>
-                                    </div>
-                                </div>
-                            </li>
-                        `).join('')}
-                    </ul>
-                </div>
-            `).join('');
-
-            // Add animation classes
-            const cards = grid.querySelectorAll('.party-card');
-            cards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.classList.add('visible');
-                }, index * 100);
-            });
-        }
-
-        // Tab switching functionality
-        const tabs = document.querySelectorAll('.tab-btn');
-        const sections = document.querySelectorAll('.party-section');
-
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const type = tab.dataset.tab;
-                
-                // Update active states
-                tabs.forEach(t => t.classList.remove('active'));
-                sections.forEach(s => s.classList.remove('active'));
-                tab.classList.add('active');
-                document.getElementById(`${type}-section`).classList.add('active');
-
-                // Show loading state
-                const loadingOverlay = document.querySelector('.loading-overlay');
-                if (loadingOverlay) {
-                    loadingOverlay.style.display = 'flex';
-                }
-
-                // Load data for the selected tab
-                displayPartyList(type).finally(() => {
-                    // Hide loading state
-                    if (loadingOverlay) {
-                        loadingOverlay.style.display = 'none';
-                    }
-                });
-            });
-        });
-
-        // Initial load
-        document.addEventListener('DOMContentLoaded', () => {
+        async function displayPartyList() {
+            const grid = document.getElementById('party-grid');
             const loadingOverlay = document.querySelector('.loading-overlay');
-            if (loadingOverlay) {
-                loadingOverlay.style.display = 'flex';
-            }
 
-            displayPartyList('woc').finally(() => {
+            try {
+                console.log('Fetching party list...');
+                const data = await fetchSheetData(CONFIG.SHEETS.PARTY, { raw: true });
+                console.log('Received data:', data);
+                displayTeams(data, grid);
+            } catch (error) {
+                console.error('Error loading party list:', error);
+                grid.innerHTML = `
+                    <div class="error-message">
+                        <h3>Unable to load party data</h3>
+                        <p>Please try again later.</p>
+                        <p class="error-details">${error.message}</p>
+                    </div>`;
+            } finally {
                 if (loadingOverlay) {
                     loadingOverlay.style.display = 'none';
                 }
-            });
-        });
+            }
+        }
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', displayPartyList);
     </script>
 </body>
 </html>
