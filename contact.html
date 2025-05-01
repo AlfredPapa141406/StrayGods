@@ -8,6 +8,108 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .contact-hero {
+            position: relative;
+            padding: 4rem 2rem;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            margin-bottom: 2rem;
+        }
+
+        .contact-section {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-icon {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .section-heading {
+            color: var(--text-color);
+            margin: 0.5rem 0;
+        }
+
+        .section-divider {
+            width: 60px;
+            height: 3px;
+            background: var(--accent-color);
+            margin: 1rem auto;
+        }
+
+        .content-text {
+            color: var(--text-color);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .contact-info-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-info-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-info-item h3 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .contact-info-item p {
+            color: var(--text-color);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .contact-info-item .contact-link {
+            display: inline-block;
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--accent-color);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-info-item .contact-link:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-color-dark);
+        }
+    </style>
 </head>
 <body class="page-transition">
     <div id="loading" class="loading-overlay">
@@ -61,71 +163,6 @@
                 </div>
             </section>
 
-            <section class="contact-section connect-section">
-                <div class="section-header">
-                    <i class="fas fa-comments section-icon"></i>
-                    <h2 class="section-heading">Connect With Us</h2>
-                    <div class="section-divider"></div>
-                </div>
-
-                <div class="contact-grid">
-                    <div class="contact-method-card discord">
-                        <i class="fab fa-discord contact-icon"></i>
-                        <div class="contact-method-content">
-                            <h3>Discord Community</h3>
-                            <p>Join our active Discord community</p>
-                            <a href="#" class="btn btn-secondary">
-                                <i class="fas fa-headset"></i> Join Server
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="contact-method-card email">
-                        <i class="fas fa-envelope contact-icon"></i>
-                        <div class="contact-method-content">
-                            <h3>Email Us</h3>
-                            <p>Get in touch via email</p>
-                            <a href="mailto:contact@straygodsguild.com" class="contact-link">
-                                contact@straygodsguild.com
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="contact-method-card facebook">
-                        <i class="fab fa-facebook contact-icon"></i>
-                        <div class="contact-method-content">
-                            <h3>Facebook</h3>
-                            <p>Follow our Facebook page</p>
-                            <a href="#" class="btn btn-secondary">
-                                <i class="fas fa-thumbs-up"></i> Follow Us
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="contact-section faq-section">
-                <div class="section-header">
-                    <i class="fas fa-question-circle section-icon"></i>
-                    <h2 class="section-heading">Frequently Asked Questions</h2>
-                    <div class="section-divider"></div>
-                </div>
-
-                <div class="faq-grid">
-                    <div class="faq-card">
-                        <h3><i class="fas fa-star"></i> What are the requirements to join?</h3>
-                        <p>We welcome dedicated players who are active, friendly, and willing to contribute to our community. Specific level and class requirements may vary.</p>
-                    </div>
-                    <div class="faq-card">
-                        <h3><i class="fas fa-clock"></i> How long does the application process take?</h3>
-                        <p>Applications are typically reviewed within 48-72 hours. You'll receive a response through Discord or email.</p>
-                    </div>
-                    <div class="faq-card">
-                        <h3><i class="fas fa-users"></i> What activities does the guild participate in?</h3>
-                        <p>We organize regular WoE events, guild dungeons, social gatherings, and collaborative activities for all members.</p>
-                    </div>
-                </div>
-            </section>
         </div>
     </main>
 
@@ -164,6 +201,7 @@
     <script type="module" src="js/config.js"></script>
     <script type="module" src="js/sheets.js"></script>
     <script type="module">
+        import { CONFIG } from './js/config.js';
         import { fetchSheetData } from './js/sheets.js';
 
         async function loadContactContent() {
@@ -174,34 +212,48 @@
                     loadingOverlay.style.display = 'flex';
                 }
 
-                // Fetch contact data
-                const contact = await fetchSheetData('Contact');
+                const contactData = await fetchSheetData(CONFIG.SHEETS.CONTACT);
 
-                // Display join info
+                if (!contactData || contactData.length === 0) {
+                    throw new Error('No contact data available');
+                }
+
+                // Update join info
                 const joinInfo = document.getElementById('join-info');
-                const info = contact.find(section => section.type === 'join_info');
-                if (info) {
-                    joinInfo.innerHTML = info.content;
+                const joinData = contactData.find(item => item.section === 'join_info');
+                if (joinData && joinInfo) {
+                    joinInfo.innerHTML = joinData.content;
                 }
 
-            } catch (error) {
-                console.error('Error loading contact content:', error);
-                const main = document.querySelector('main');
-                if (main) {
-                    main.innerHTML += `
-                        <div class="error-message">
-                            Error loading content. Please try again later.
-                        </div>
-                    `;
+                // Update application form link
+                const applyButton = document.querySelector('a.btn-primary[href*="google.com/forms"]');
+                const applicationData = contactData.find(item => item.section === 'application_form');
+                if (applicationData && applicationData.link && applyButton) {
+                    applyButton.href = applicationData.link;
                 }
+
+                // Update footer contact information
+                const footerContact = document.querySelector('.footer-section:nth-child(2)');
+                if (footerContact) {
+                    const discordInfo = contactData.find(item => item.section === 'discord');
+                    const emailInfo = contactData.find(item => item.section === 'email');
+                    if (discordInfo && emailInfo) {
+                        footerContact.innerHTML = `
+                            <h3>Contact Us</h3>
+                            <p>Discord: ${discordInfo.name || 'STRAYGODS Guild'}</p>
+                            <p>Email: ${emailInfo.link || 'contact@straygodsguild.com'}</p>
+                        `;
+                    }
+                }
+
             } finally {
                 if (loadingOverlay) {
                     loadingOverlay.style.display = 'none';
                 }
+                document.body.classList.add('loaded');
             }
         }
 
-        // Load content when the page loads
         document.addEventListener('DOMContentLoaded', loadContactContent);
     </script>
 </body>

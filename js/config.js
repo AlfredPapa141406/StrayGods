@@ -12,11 +12,9 @@ export const CONFIG = {
         ABOUT: 'About',
         ACHIEVEMENTS: 'Guild Achievement',
         MEMBERS: 'Members',
-        CONTACT: 'Contact',
-        CLASSES: 'Classes',
-        ACTIVITIES: 'Activities',
         APPLICATIONS: 'Applications',
         LEADERSHIP: 'Guild Leadership',
-        PARTY: 'WoE_WoC Party'
+        PARTY: 'WoE_WoC Party',
+        CONTACT: 'Contact'
     }
 }; 
